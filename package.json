@@ -16,6 +16,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "chart.js": "^4.4.4"
+        "chart.js": "^4.4.4",
+        "chartjs-adapter-moment": "^1.0.1",
+        "moment": "^2.30.1"
     }
 }

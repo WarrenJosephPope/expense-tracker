@@ -18,6 +18,9 @@ class Expense extends Model
         'user_id', // Assuming you have a user_id field for the user who created the expense
     ];
 
+    protected $casts = [
+        'tracked_date' => 'datetime',  // Cast tracked_date to a Carbon instance
+    ];
 
     public function user()
     {
