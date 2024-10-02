@@ -22,7 +22,7 @@
 
         <div class="mb-4">
             <label for="amount" class="block text-gray-700 text-sm font-semibold mb-2">Amount</label>
-            <input type="number" name="amount" id="amount" required class="block w-full border border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 px-3 py-2" placeholder="Enter amount">
+            <input type="number" name="amount" id="amount" step="0.01" required class="block w-full border border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 px-3 py-2" placeholder="Enter amount">
         </div>
 
         <div class="mb-4">

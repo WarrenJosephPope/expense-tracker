@@ -4,6 +4,15 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6 text-gray-800">Expenses</h1>
 
+    <!-- Display User's Current Balance -->
+    <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow">
+        <h2 class="text-xl font-bold text-gray-700">Current Balance: 
+            <span class="{{ $balance >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                ₹{{ number_format($balance, 2) }}
+            </span>
+        </h2>
+    </div>
+
     <!-- Filters Section -->
     <div class="flex flex-col md:flex-row mb-4 items-end flex-wrap">
         <form action="{{ route('expenses.index') }}" method="GET" class="flex items-end gap-2 mb-4 md:mb-0 flex-wrap">

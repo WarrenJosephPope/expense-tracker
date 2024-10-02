@@ -29,7 +29,7 @@
 
         <div class="mb-4">
             <label for="amount" class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
-            <input type="number" name="amount" id="amount" value="{{ old('amount', $expense->amount) }}" class="border border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 w-full px-3 py-2 @error('amount') border-red-500 @enderror">
+            <input type="number" name="amount" id="amount" step="0.01" value="{{ old('amount', $expense->amount) }}" class="border border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 w-full px-3 py-2 @error('amount') border-red-500 @enderror">
             @error('amount')
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror

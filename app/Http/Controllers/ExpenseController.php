@@ -12,6 +12,10 @@ class ExpenseController extends Controller
     // Display a listing of expenses
     public function index(Request $request)
     {
+        $user = auth()->user();
+
+        $balance = $user->balance;
+
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
@@ -38,7 +42,7 @@ class ExpenseController extends Controller
         $expenses = $query->paginate(10);
         $categories = ExpenseCategory::all();
 
-        return view('expenses.index', compact('expenses', 'categories'));
+        return view('expenses.index', compact('expenses', 'categories', 'balance'));
     }
 
     // Show the form for creating a new expense
