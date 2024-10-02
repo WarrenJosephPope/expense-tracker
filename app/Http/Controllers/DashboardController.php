@@ -39,6 +39,7 @@ class DashboardController extends Controller
         $pieChartLabels = $categories->pluck('name')->toArray();
         $pieChartData = $categories->map(function ($category) use ($user) {
             return Expense::where('user_id', $user->id)
+                ->where('type', 'debit') // Filter by type (assuming 'debit' indicates debit expenses)
                 ->where('expense_category_id', $category->id) // Use expense_category_id
                 ->sum('amount'); // Sum the amounts for each category
         })->toArray();
@@ -46,32 +47,50 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('lineChartLabels', 'lineChartData', 'pieChartLabels', 'pieChartData'));
     }
 
-    public function getLineGraphData()
+    public function fetchData(Request $request)
     {
-        // For this month, group expenses by day
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->endOfMonth();
+        $user = Auth::user();
+        $month = $request->input('month');
+        $year = $request->input('year');
 
-        // Replace with 'YEAR' for yearly data
-        $expenses = Expense::where('user_id', auth()->id())
-            ->whereBetween('tracked_date', [$startDate, $endDate])
-            ->selectRaw('DATE(tracked_date) as date, SUM(amount) as total')
-            ->groupBy('date')
-            ->orderBy('date', 'ASC')
+        // Get only debited expenses for the selected month and year
+        $expenses = Expense::where('user_id', $user->id)
+            ->where('type', 'debit')
+            ->whereMonth('tracked_date', $month)
+            ->whereYear('tracked_date', $year)
             ->get();
 
-        return response()->json($expenses);
-    }
+        // Prepare data for the line chart
+        $lineChartLabels = [];
+        $lineChartData = [];
 
-    public function getPieChartData()
-    {
-        // Total expenses per category
-        $expenses = Expense::where('user_id', auth()->id())
-            ->selectRaw('expense_category_id, SUM(amount) as total')
-            ->groupBy('expense_category_id')
-            ->with('category') // Ensure you fetch the category name
-            ->get();
+        foreach ($expenses as $expense) {
+            $date = $expense->tracked_date->format('Y-m-d');
+            if (!isset($lineChartData[$date])) {
+                $lineChartData[$date] = 0;
+                $lineChartLabels[] = $date;
+            }
+            $lineChartData[$date] += $expense->amount; // Sum the debited amounts
+        }
 
-        return response()->json($expenses);
+        // Get categories for the pie chart
+        $categories = ExpenseCategory::all();
+
+        $pieChartLabels = $categories->pluck('name')->toArray();
+        $pieChartData = $categories->map(function ($category) use ($user, $month, $year) {
+            return Expense::where('user_id', $user->id)
+                ->where('type', 'debit')
+                ->where('expense_category_id', $category->id)
+                ->whereMonth('tracked_date', $month)
+                ->whereYear('tracked_date', $year)
+                ->sum('amount');
+        })->toArray();
+
+        return response()->json([
+            'lineChartLabels' => $lineChartLabels,
+            'lineChartData' => array_values($lineChartData),
+            'pieChartLabels' => $pieChartLabels,
+            'pieChartData' => $pieChartData,
+        ]);
     }
 }

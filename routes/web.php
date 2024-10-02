@@ -20,8 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/line-graph-data', [DashboardController::class, 'getLineGraphData'])->name('dashboard.lineGraphData');
-    Route::get('/dashboard/pie-chart-data', [DashboardController::class, 'getPieChartData'])->name('dashboard.pieChartData');
+    Route::get('/dashboard/data', [DashboardController::class, 'fetchData'])->name('dashboard.data');
 
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expense-categories', ExpenseCategoryController::class);
