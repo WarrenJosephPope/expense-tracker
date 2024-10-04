@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'rgba(75, 192, 192, 0.6)', // Teal
         'rgba(153, 102, 255, 0.6)', // Purple
         'rgba(255, 159, 64, 0.6)', // Orange
-        'rgba(255, 99, 132, 0.6)', // Red
         'rgba(255, 205, 86, 0.6)', // Light Yellow
         'rgba(75, 75, 192, 0.6)', // Dark Teal
         'rgba(64, 255, 64, 0.6)', // Green
