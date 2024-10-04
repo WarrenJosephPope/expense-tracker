@@ -39,7 +39,7 @@ class ExpenseController extends Controller
             $query->where('name', 'like', '%' . $request->input('search') . '%');
         }
 
-        $expenses = $query->paginate(10);
+        $expenses = $query->orderBy('tracked_date', 'desc')->orderBy('created_at', 'desc')->paginate(10);
         $categories = ExpenseCategory::all();
 
         return view('expenses.index', compact('expenses', 'categories', 'balance'));
