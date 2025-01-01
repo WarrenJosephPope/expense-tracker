@@ -50,8 +50,36 @@ class DashboardController extends Controller
     public function fetchData(Request $request)
     {
         $user = Auth::user();
+
         $month = $request->input('month');
         $year = $request->input('year');
+
+        // Get the first and last day of the selected month
+        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::create($year, $month, 1)->endOfMonth();
+
+        // Total expenses for the month (only debits)
+        $totalExpenses = Expense::query()
+            ->where('user_id', $user->id)
+            ->where('tracked_date', '>=', $startDate)
+            ->where('tracked_date', '<=', $endDate)
+            ->where('type', 'debit') // Assuming you have 'debit' for expenses
+            ->sum('amount');
+
+        // Number of days in the month
+        $daysInMonth = $startDate->daysInMonth;
+
+        // Average expenses per day (assuming we calculate only on days with expenses)
+        $daysWithExpenses = Expense::query()
+            ->where('user_id', $user->id)
+            ->where('tracked_date', '>=', $startDate)
+            ->where('tracked_date', '<=', $endDate)
+            ->where('type', 'debit')
+            ->distinct('tracked_date')
+            ->count('tracked_date');
+
+        // If there are no expenses, avoid division by zero
+        $averageExpensesPerDay = $daysWithExpenses > 0 ? ($totalExpenses / $daysWithExpenses) : 0;
 
         // Get only debited expenses for the selected month and year
         $expenses = Expense::where('user_id', $user->id)
@@ -87,6 +115,8 @@ class DashboardController extends Controller
         })->toArray();
 
         return response()->json([
+            'totalExpenses' => (double)$totalExpenses,
+            'averageExpensesPerDay' => $averageExpensesPerDay,
             'lineChartLabels' => $lineChartLabels,
             'lineChartData' => array_values($lineChartData),
             'pieChartLabels' => $pieChartLabels,
