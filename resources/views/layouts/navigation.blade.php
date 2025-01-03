@@ -77,6 +77,16 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.index')">
+                {{ __('Expenses') }}
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('expense-categories.index')" :active="request()->routeIs('expense-categories.index')">
+                {{ __('Expense Categories') }}
+            </x-responsive-nav-link>
+        </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
