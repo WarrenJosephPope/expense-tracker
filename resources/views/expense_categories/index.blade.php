@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-10">
+<div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-semibold mb-6">Expense Categories</h1>
 
     <!-- Create Category Button -->
